@@ -44,3 +44,4 @@ const FinalPayloadHasMissingPropertiesErrorContext = "The final JSON payload doe
 
 // ReadMessageErrorContext ...
 const ReadMessageErrorContext = "Error while reading new messages through the socket connection"
+

@@ -258,6 +258,13 @@ func (s *Socket) parseJSON(msg []byte) (symbol string, data *QuoteData, err erro
 		return
 	}
 
+	if decodedQuoteMessage.Status == "error" && decodedQuoteMessage.Symbol != ""  {
+		err = errors.New("symbol not supported and removed")
+		s.RemoveSymbol(decodedQuoteMessage.Symbol)	
+		s.OnErrorCallback(err, decodedQuoteMessage.Symbol)			
+		return
+	}	
+
 	if decodedQuoteMessage.Status != "ok" || decodedQuoteMessage.Symbol == "" || decodedQuoteMessage.Data == nil {
 		err = errors.New("There is something wrong with the payload - couldn't be parsed -> " + string(msg))
 		s.onError(err, FinalPayloadHasMissingPropertiesErrorContext)
