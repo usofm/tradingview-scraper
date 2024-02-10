@@ -71,7 +71,7 @@ func (s *Socket) Close() (err error) {
 // AddSymbol ...
 func (s *Socket) AddSymbol(symbol string) (err error) {
 	err = s.sendSocketMessage(
-		getSocketMessage("quote_add_symbols", []interface{}{s.sessionID, symbol, getFlags()}),
+		getSocketMessage("quote_add_symbols", []interface{}{s.sessionID, symbol}),
 	)
 	return
 }
@@ -258,12 +258,12 @@ func (s *Socket) parseJSON(msg []byte) (symbol string, data *QuoteData, err erro
 		return
 	}
 
-	if decodedQuoteMessage.Status == "error" && decodedQuoteMessage.Symbol != ""  {
+	if decodedQuoteMessage.Status == "error" && decodedQuoteMessage.Symbol != "" {
 		err = errors.New("symbol not supported and removed")
-		s.RemoveSymbol(decodedQuoteMessage.Symbol)	
-		s.OnErrorCallback(err, decodedQuoteMessage.Symbol)			
+		s.RemoveSymbol(decodedQuoteMessage.Symbol)
+		s.OnErrorCallback(err, decodedQuoteMessage.Symbol)
 		return
-	}	
+	}
 
 	if decodedQuoteMessage.Status != "ok" || decodedQuoteMessage.Symbol == "" || decodedQuoteMessage.Data == nil {
 		err = errors.New("There is something wrong with the payload - couldn't be parsed -> " + string(msg))
